@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demokubernetes
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: demokubernetes
+      labels:
+        app: demokubernetes
+    spec:
+      containers:
+        - name: demokubernetes
+          image: {{ .Values.image.repository }}
+          ports:
+           - name: app-port
+             containerPort: 8080
+          env:
+            - name: demo.prefix
+              value: {{ .Values.demoPrefix }}

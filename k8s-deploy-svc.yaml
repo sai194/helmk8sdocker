@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demokubernetes
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: demokubernetes
+      labels:
+        app: demokubernetes
+    spec:
+      containers:
+        - name: demokubernetes
+          image: sai194/demokubernetes:1.0.0
+          ports:
+           - name: app-port
+             containerPort: 8080
+          env:
+            - name: demo.prefix
+              value: Ikshvak
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-svc
+spec:
+  ports:
+    - port: 8080
+      targetPort: app-port
+      protocol: TCP
+  selector:
+    app: demokubernetes
+  type: LoadBalancer
